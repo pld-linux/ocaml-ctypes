@@ -2,6 +2,17 @@
 # Conditional build:
 %bcond_without	ocaml_opt		# build opt
 
+%ifarch x32
+# not yet available on x32 (ocaml 4.02.1), remove when upstream will support it
+%undefine	with_ocaml_opt
+%endif
+
+%if %{without ocaml_opt}
+%define		no_install_post_strip	1
+# no opt means no native binary, stripping bytecode breaks such programs
+%define		_enable_debug_packages	0
+%endif
+
 %define		module	ctypes
 Summary:	Library for binding to C libraries using pure OCaml
 Name:		ocaml-%{module}
@@ -16,17 +27,6 @@ URL:		https://github.com/ocamllabs/ocaml-ctypes
 BuildRequires:	ocaml >= 3.04-7
 %requires_eq	ocaml-runtime
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
-
-%ifarch x32
-# not yet available on x32 (ocaml 4.02.1), remove when upstream will support it
-%undefine▸      with_ocaml_opt
-%endif
-
-%if %{without ocaml_opt}
-%define▸▸       no_install_post_strip▸  1
-# no opt means no native binary, stripping bytecode breaks such programs
-%define▸▸       _enable_debug_packages▸ 0
-%endif
 
 %description
 ctypes is a library for binding to C libraries using pure OCaml.
