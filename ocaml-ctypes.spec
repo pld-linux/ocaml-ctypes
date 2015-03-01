@@ -2,17 +2,6 @@
 # Conditional build:
 %bcond_without	ocaml_opt		# build opt
 
-%ifarch x32
-# not yet available on x32 (ocaml 4.02.1), remove when upstream will support it
-%undefine▸      with_ocaml_opt
-%endif
-
-%if %{without ocaml_opt}
-%define▸▸       no_install_post_strip▸  1
-# no opt means no native binary, stripping bytecode breaks such programs
-%define▸▸       _enable_debug_packages▸ 0
-%endif
-
 %define		module	ctypes
 Summary:	Library for binding to C libraries using pure OCaml
 Name:		ocaml-%{module}
@@ -27,6 +16,17 @@ URL:		https://github.com/ocamllabs/ocaml-ctypes
 BuildRequires:	ocaml >= 3.04-7
 %requires_eq	ocaml-runtime
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+%ifarch x32
+# not yet available on x32 (ocaml 4.02.1), remove when upstream will support it
+%undefine▸      with_ocaml_opt
+%endif
+
+%if %{without ocaml_opt}
+%define▸▸       no_install_post_strip▸  1
+# no opt means no native binary, stripping bytecode breaks such programs
+%define▸▸       _enable_debug_packages▸ 0
+%endif
 
 %description
 ctypes is a library for binding to C libraries using pure OCaml.
@@ -52,10 +52,10 @@ This package contains files needed to develop OCaml programs using
 TEMPLATE library.
 
 %prep
-%setup -q -n %{module}-%{version}
+%setup -q
 
 %build
-%{__make} -j1 all %{?with_ocaml_opt:opt} \
+%{__make} -j1 all \
 	CC="%{__cc} %{rpmcflags} -fPIC"
 
 %install
@@ -65,8 +65,8 @@ install -d $OCAMLFIND_DESTDIR $OCAMLFIND_DESTDIR/stublibs
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-#install -d $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
-#cp -r foo bar $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
+install -d $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
+cp -r examples/* $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 
 # move to dir pld ocamlfind looks
 install -d $RPM_BUILD_ROOT%{_libdir}/ocaml/site-lib/%{module}
@@ -87,7 +87,6 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc LICENSE
 %{_libdir}/ocaml/%{module}/*.cm[xi]
-%{_libdir}/ocaml/%{module}/*.cmo
 %{_libdir}/ocaml/%{module}/*.mli
 %if %{with ocaml_opt}
 %{_libdir}/ocaml/%{module}/*.[ao]
