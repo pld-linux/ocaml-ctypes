@@ -1,18 +1,3 @@
-#
-# Conditional build:
-%bcond_without	ocaml_opt		# build opt
-
-%ifarch x32
-# not yet available on x32 (ocaml 4.02.1), remove when upstream will support it
-%undefine	with_ocaml_opt
-%endif
-
-%if %{without ocaml_opt}
-%define		no_install_post_strip	1
-# no opt means no native binary, stripping bytecode breaks such programs
-%define		_enable_debug_packages	0
-%endif
-
 %define		module	ctypes
 Summary:	Library for binding to C libraries using pure OCaml
 Name:		ocaml-%{module}
@@ -26,6 +11,9 @@ URL:		https://github.com/ocamllabs/ocaml-ctypes
 #BuildRequires:	-devel
 BuildRequires:	ocaml >= 3.04-7
 %requires_eq	ocaml-runtime
+# requires opt not yet available on x32 (ocaml 4.02.1), remove when upstream will support it
+ExclusiveArch:	%{ix86} %{x8664}
+%undefine	with_ocaml_opt
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -42,14 +30,14 @@ This package contains files needed to run bytecode executables using
 this library.
 
 %package devel
-Summary:	TEMPLATE binding for OCaml - development part
+Summary:	Library for binding to C libraries using pure OCaml - development part
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
 %requires_eq	ocaml
 
 %description devel
 This package contains files needed to develop OCaml programs using
-TEMPLATE library.
+ctypes library.
 
 %prep
 %setup -q
@@ -86,11 +74,12 @@ rm -rf $RPM_BUILD_ROOT
 %files devel
 %defattr(644,root,root,755)
 %doc LICENSE
+%{_libdir}/ocaml/%{module}/*.h
 %{_libdir}/ocaml/%{module}/*.cm[xi]
 %{_libdir}/ocaml/%{module}/*.mli
-%if %{with ocaml_opt}
 %{_libdir}/ocaml/%{module}/*.[ao]
+%{_libdir}/ocaml/%{module}/*.cma
 %{_libdir}/ocaml/%{module}/*.cmxa
-%endif
+%{_libdir}/ocaml/%{module}/*.cmxs
 %{_libdir}/ocaml/site-lib/%{module}
 %{_examplesdir}/%{name}-%{version}
