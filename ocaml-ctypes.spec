@@ -13,7 +13,6 @@ BuildRequires:	ocaml >= 3.04-7
 %requires_eq	ocaml-runtime
 # requires opt not yet available on x32 (ocaml 4.02.1), remove when upstream will support it
 ExclusiveArch:	%{ix86} %{x8664}
-%undefine	with_ocaml_opt
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
