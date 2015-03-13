@@ -12,8 +12,8 @@ URL:		https://github.com/ocamllabs/ocaml-ctypes
 BuildRequires:	libffi-devel
 BuildRequires:	ocaml >= 3.04-7
 %requires_eq	ocaml-runtime
-# requires opt not yet available on x32 (ocaml 4.02.1), remove when upstream will support it
-ExclusiveArch:	%{ix86} %{x8664}
+# archs with ocaml_opt support (keep in sync with ocaml.spec)
+ExclusiveArch:	%{ix86} %{x8664} arm aarch64 ppc sparc sparcv9 
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
