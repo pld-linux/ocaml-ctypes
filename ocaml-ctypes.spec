@@ -95,6 +95,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(644,root,root,755)
+%dir %{_libdir}/ocaml/%{module}
 %{_libdir}/ocaml/%{module}/*.h
 %{_libdir}/ocaml/%{module}/*.cm[xi]
 %{_libdir}/ocaml/%{module}/*.mli
