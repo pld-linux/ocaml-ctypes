@@ -2,18 +2,18 @@
 Summary:	Library for binding to C libraries using pure OCaml
 Summary(pl.UTF-8):	Biblioteka do wiązania z bibliotekami C przy użyciu czystego OCamla
 Name:		ocaml-%{module}
-Version:	0.3.4
-Release:	2
+Version:	0.4.1
+Release:	1
 License:	MIT
 Group:		Libraries
-Source0:	https://github.com/ocamllabs/ocaml-ctypes/archive/%{version}.tar.gz?/%{module}-%{version}.tar.gz
-# Source0-md5:	5356f0bab5cbc29eba3dded5e35a9e9d
+Source0:	https://github.com/ocamllabs/ocaml-ctypes/archive/%{version}/%{module}-%{version}.tar.gz
+# Source0-md5:	08a284c379e341d57b6918611b5bc56b
 URL:		https://github.com/ocamllabs/ocaml-ctypes
 BuildRequires:	libffi-devel
 BuildRequires:	ocaml >= 3.04-7
 %requires_eq	ocaml-runtime
 # archs with ocaml_opt support (keep in sync with ocaml.spec)
-ExclusiveArch:	%{ix86} %{x8664} arm aarch64 ppc sparc sparcv9 
+ExclusiveArch:	%{ix86} %{x8664} arm aarch64 ppc sparc sparcv9
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -83,6 +83,11 @@ mv $OCAMLFIND_DESTDIR/%{module}/META \
 cat <<EOF >> $RPM_BUILD_ROOT%{_libdir}/ocaml/site-lib/%{module}/META
 directory="+%{module}"
 EOF
+
+# packaged as %doc
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/ocaml/ctypes/CHANGES.md
+# findlib files, useless when packaging to rpm
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/ocaml/stublibs/*.owner
 
 %clean
 rm -rf $RPM_BUILD_ROOT
