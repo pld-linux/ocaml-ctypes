@@ -3,7 +3,7 @@ Summary:	Library for binding to C libraries using pure OCaml
 Summary(pl.UTF-8):	Biblioteka do wiązania z bibliotekami C przy użyciu czystego OCamla
 Name:		ocaml-%{module}
 Version:	0.4.1
-Release:	1
+Release:	2
 License:	MIT
 Group:		Libraries
 Source0:	https://github.com/ocamllabs/ocaml-ctypes/archive/%{version}/%{module}-%{version}.tar.gz
@@ -97,16 +97,16 @@ rm -rf $RPM_BUILD_ROOT
 %doc CHANGES.md LICENSE README.md
 %attr(755,root,root) %{_libdir}/ocaml/stublibs/dllctypes-foreign-base_stubs.so
 %attr(755,root,root) %{_libdir}/ocaml/stublibs/dllctypes_stubs.so
+%dir %{_libdir}/ocaml/%{module}
+%attr(755,root,root) %{_libdir}/ocaml/%{module}/*.cmxs
+%{_libdir}/ocaml/%{module}/*.cma
 
 %files devel
 %defattr(644,root,root,755)
-%dir %{_libdir}/ocaml/%{module}
 %{_libdir}/ocaml/%{module}/*.h
-%{_libdir}/ocaml/%{module}/*.cm[xi]
+%{_libdir}/ocaml/%{module}/*.cm[ix]
 %{_libdir}/ocaml/%{module}/*.mli
 %{_libdir}/ocaml/%{module}/*.[ao]
-%{_libdir}/ocaml/%{module}/*.cma
 %{_libdir}/ocaml/%{module}/*.cmxa
-%{_libdir}/ocaml/%{module}/*.cmxs
 %{_libdir}/ocaml/site-lib/%{module}
 %{_examplesdir}/%{name}-%{version}
