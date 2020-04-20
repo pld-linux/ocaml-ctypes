@@ -3,7 +3,7 @@ Summary:	Library for binding to C libraries using pure OCaml
 Summary(pl.UTF-8):	Biblioteka do wiązania z bibliotekami C przy użyciu czystego OCamla
 Name:		ocaml-%{module}
 Version:	0.11.5
-Release:	2
+Release:	3
 License:	MIT
 Group:		Libraries
 #Source0Download: https://github.com/ocamllabs/ocaml-ctypes/releases
