@@ -1,3 +1,16 @@
+#
+# Conditional build:
+%bcond_without	ocaml_opt	# skip building native optimized binaries (bytecode is always built)
+
+# not yet available on x32 (ocaml 4.02.1), update when upstream will support it
+%ifnarch %{ix86} %{x8664} %{arm} aarch64 ppc sparc sparcv9
+%undefine	with_ocaml_opt
+%endif
+
+%if %{without ocaml_opt}
+%define		_enable_debug_packages	0
+%endif
+
 %define		module	ctypes
 Summary:	Library for binding to C libraries using pure OCaml
 Summary(pl.UTF-8):	Biblioteka do wiązania z bibliotekami C przy użyciu czystego OCamla
@@ -15,8 +28,6 @@ BuildRequires:	ocaml >= 3.04-7
 BuildRequires:	ocaml-bigarray-compat-devel
 BuildRequires:	ocaml-integers-devel
 %requires_eq	ocaml-runtime
-# archs with ocaml_opt support (keep in sync with ocaml.spec)
-ExclusiveArch:	%{ix86} %{x8664} %{arm} aarch64 ppc sparc sparcv9
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -79,7 +90,6 @@ install -d $OCAMLFIND_DESTDIR $OCAMLFIND_DESTDIR/stublibs
 install -d $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 cp -r examples/* $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/ocaml/ctypes/*.{cmt,cmti}
 # packaged as %doc
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/ocaml/ctypes/CHANGES.md
 # findlib files, useless when packaging to rpm
@@ -95,14 +105,20 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/ocaml/stublibs/dllctypes-foreign_stubs.so
 %dir %{_libdir}/ocaml/%{module}
 %{_libdir}/ocaml/%{module}/META
+%if %{with ocaml_opt}
 %attr(755,root,root) %{_libdir}/ocaml/%{module}/*.cmxs
+%endif
 %{_libdir}/ocaml/%{module}/*.cma
 
 %files devel
 %defattr(644,root,root,755)
 %{_libdir}/ocaml/%{module}/*.h
-%{_libdir}/ocaml/%{module}/*.cm[ix]
+%{_libdir}/ocaml/%{module}/*.cmi
+%{_libdir}/ocaml/%{module}/*.cmti
 %{_libdir}/ocaml/%{module}/*.mli
 %{_libdir}/ocaml/%{module}/*.a
+%if %{with ocaml_opt}
+%{_libdir}/ocaml/%{module}/*.cmx
 %{_libdir}/ocaml/%{module}/*.cmxa
+%endif
 %{_examplesdir}/%{name}-%{version}
