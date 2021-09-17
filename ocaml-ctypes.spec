@@ -1,6 +1,6 @@
 #
 # Conditional build:
-%bcond_without	ocaml_opt	# skip building native optimized binaries (bytecode is always built)
+%bcond_without	ocaml_opt	# native optimized binaries (bytecode is always built)
 
 # not yet available on x32 (ocaml 4.02.1), update when upstream will support it
 %ifnarch %{ix86} %{x8664} %{arm} aarch64 ppc sparc sparcv9
@@ -15,18 +15,18 @@
 Summary:	Library for binding to C libraries using pure OCaml
 Summary(pl.UTF-8):	Biblioteka do wiązania z bibliotekami C przy użyciu czystego OCamla
 Name:		ocaml-%{module}
-Version:	0.18.0
+Version:	0.19.1
 Release:	1
 License:	MIT
 Group:		Libraries
 #Source0Download: https://github.com/ocamllabs/ocaml-ctypes/releases
 Source0:	https://github.com/ocamllabs/ocaml-ctypes/archive/%{version}/%{module}-%{version}.tar.gz
-# Source0-md5:	5d9ef3790fda7cd97a8cec08be4b5b61
+# Source0-md5:	ceb891ec568fd7da76c31af270a2afe2
 URL:		https://github.com/ocamllabs/ocaml-ctypes
 BuildRequires:	libffi-devel
-BuildRequires:	ocaml >= 3.04-7
+BuildRequires:	ocaml >= 1:4.03.0
 BuildRequires:	ocaml-bigarray-compat-devel
-BuildRequires:	ocaml-integers-devel
+BuildRequires:	ocaml-integers-devel >= 0.3.0
 %requires_eq	ocaml-runtime
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -63,7 +63,7 @@ Summary:	Library for binding to C libraries using pure OCaml - development part
 Summary(pl.UTF-8):	Biblioteka do wiązania z bibliotekami C przy użyciu czystego OCamla - część programistyczna
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
-%requires_eq ocaml
+%requires_eq	ocaml
 
 %description devel
 This package contains files needed to develop OCaml programs using
@@ -84,6 +84,7 @@ wykorzystujących bibliotekę ctypes.
 rm -rf $RPM_BUILD_ROOT
 export OCAMLFIND_DESTDIR=$RPM_BUILD_ROOT%{_libdir}/ocaml
 install -d $OCAMLFIND_DESTDIR $OCAMLFIND_DESTDIR/stublibs
+
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
